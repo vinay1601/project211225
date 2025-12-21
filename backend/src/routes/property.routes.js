@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Property = require("../models/Property");
 
 router.get("/", async (req, res) => {
-  const data = await Property.find().limit(20);
+  const data = await Property.find().limit(100);
   res.json(data);
 });
 

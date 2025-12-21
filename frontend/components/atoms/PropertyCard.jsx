@@ -3,32 +3,42 @@ import { Badge } from "@/components/ui/badge";
 
 export default function PropertyCard({ p }) {
   return (
-    <Card className="overflow-hidden hover:shadow-xl transition">
+    <div className="bg-white rounded-xl shadow hover:shadow-lg overflow-hidden">
+      {/* Image */}
       <img
         src={p.images?.[0] || "/placeholder.jpg"}
         alt={p.title}
         className="h-48 w-full object-cover"
       />
 
-      <CardContent className="p-4 space-y-2">
-        <h2 className="font-semibold text-lg line-clamp-1">
+      <div className="p-4 space-y-2">
+        {/* Title */}
+        <h2 className="font-semibold text-lg line-clamp-2">
           {p.title}
         </h2>
 
-        <p className="text-sm text-muted-foreground">
-          {p.location}
+        {/* ✅ LOCATION (FIXED) */}
+        <p className="text-sm text-gray-600">
+          {p.location?.community}, {p.location?.emirate}
         </p>
 
-        <p className="text-green-600 font-bold text-lg">
+        {/* Price */}
+        <p className="text-base font-bold text-indigo-600">
           AED {p.price?.toLocaleString()}
         </p>
 
-        <div className="flex gap-2 pt-2">
-          <Badge variant="secondary">🛏 {p.bedrooms}</Badge>
-          <Badge variant="secondary">🛁 {p.bathrooms}</Badge>
-          <Badge variant="secondary">📐 {p.size} sqft</Badge>
+        {/* Meta */}
+        <div className="text-xs text-gray-500 flex gap-3">
+          <span>{p.bedrooms} Beds</span>
+          <span>{p.bathrooms} Baths</span>
+          <span>{p.builtupArea} sqft</span>
         </div>
-      </CardContent>
-    </Card>
+
+        {/* Agent */}
+        <p className="text-xs text-gray-500">
+          Agent: {p.agent?.name}
+        </p>
+      </div>
+    </div>
   );
 }

@@ -1,5 +1,5 @@
 import { getProperties } from "@/lib/api";
-import PropertyCard from "@/components/PropertyCard";
+import PropertyCard from "@/components/atoms/PropertyCard";
 
 export default async function Home() {
   const properties = await getProperties();
