@@ -17,8 +17,8 @@ export default function PropertiesPage() {
   useEffect(() => {
     setLoading(true);
     getProperties(page).then((res) => {
-      setData(res.data);
-      setPagination(res.pagination);
+      setData(res.data || []);
+      setPagination(res.pagination || {});
       setLoading(false);
     });
   }, [page]);
@@ -33,8 +33,12 @@ export default function PropertiesPage() {
             ? Array.from({ length: 6 }).map((_, i) => (
                 <PropertySkeleton key={i} />
               ))
-            : data.map((p) => (
-                <PropertyCard key={p._id} p={p} />
+            : data.map((p, index) => (
+                <PropertyCard
+                  key={p._id}
+                  p={p}
+                  isFirstCard={index === 0}
+                />
               ))}
         </div>
 
@@ -49,6 +53,7 @@ export default function PropertiesPage() {
     </>
   );
 }
+
 
 
 

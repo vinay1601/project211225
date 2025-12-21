@@ -2,17 +2,18 @@
 
 import Image from "next/image";
 import useEmblaCarousel from "embla-carousel-react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { shimmer, toBase64 } from "@/lib/imagePlaceholder";
 
-export default function PropertyCard({ p }) {
-  const images = p.images?.length ? p.images : ["/placeholder.jpg"];
+export default function PropertyCard({ p, isFirstCard = false }) {
+  const images = useMemo(
+    () => (p.images?.length ? p.images : ["/placeholder.jpg"]),
+    [p.images]
+  );
 
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selected, setSelected] = useState(0);
-  const [loaded, setLoaded] = useState(() =>
-    images.map(() => false)
-  );
+  const [loaded, setLoaded] = useState(() => images.map(() => false));
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -28,10 +29,11 @@ export default function PropertyCard({ p }) {
   useEffect(() => {
     if (!emblaApi) return;
     emblaApi.reInit();
-  }, []);
+  }, [emblaApi]);
 
   return (
     <div className="bg-white rounded-2xl shadow-sm hover:shadow-lg transition overflow-hidden">
+      {/* Image carousel */}
       <div className="relative">
         <div ref={emblaRef} className="overflow-hidden">
           <div className="flex">
@@ -45,8 +47,8 @@ export default function PropertyCard({ p }) {
                   src={img}
                   alt={p.title}
                   fill
-                  priority={i === 0}
-                  loading={i === 0 ? "eager" : "lazy"}
+                  priority={isFirstCard && i === 0}
+                  loading={isFirstCard && i === 0 ? "eager" : "lazy"}
                   placeholder={loaded[i] ? "empty" : "blur"}
                   blurDataURL={`data:image/svg+xml;base64,${toBase64(
                     shimmer(700, 475)
@@ -59,6 +61,7 @@ export default function PropertyCard({ p }) {
                   }`}
                   onLoadingComplete={() =>
                     setLoaded((prev) => {
+                      if (prev[i]) return prev;
                       const copy = [...prev];
                       copy[i] = true;
                       return copy;
@@ -70,6 +73,7 @@ export default function PropertyCard({ p }) {
           </div>
         </div>
 
+        {/* Dots */}
         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1">
           {images.map((_, i) => (
             <button
@@ -82,8 +86,6 @@ export default function PropertyCard({ p }) {
           ))}
         </div>
       </div>
-
-      {/* Content */}
       <div className="p-4 space-y-1.5">
         <h2 className="font-semibold text-lg line-clamp-2">{p.title}</h2>
 
@@ -108,6 +110,7 @@ export default function PropertyCard({ p }) {
     </div>
   );
 }
+
 
 
 
