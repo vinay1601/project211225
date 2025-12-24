@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import PropertyCard from "@/components/atoms/PropertyCard";
 import { PropertySkeleton } from "@/components/atoms/PropertySkeleton";
 import { getProperties } from "@/lib/api";
@@ -14,14 +15,38 @@ export default function PropertiesPage() {
   const [pagination, setPagination] = useState({});
   const [loading, setLoading] = useState(true);
 
+  // useEffect(() => {
+  //   setLoading(true);
+  //   getProperties(page).then((res) => {
+  //     setData(res.data || []);
+  //     setPagination(res.pagination || {});
+  //     setLoading(false);
+  //   });
+  // }, [page]);
+  //**************************working on the 24/12/25 7:09******************************** */
   useEffect(() => {
-    setLoading(true);
-    getProperties(page).then((res) => {
+  const controller = new AbortController();
+  setLoading(true);
+
+  getProperties(page, 12, controller.signal)
+    .then((res) => {
       setData(res.data || []);
       setPagination(res.pagination || {});
-      setLoading(false);
-    });
-  }, [page]);
+    })
+    .catch((err) => {
+      if (err.name !== "AbortError") console.error(err);
+    })
+    .finally(() => setLoading(false));
+
+  return () => controller.abort();
+}, [page]);
+
+const skeletons = useMemo(
+  () => Array.from({ length: 6 }),
+  []
+);
+
+
 
   return (
     <>
@@ -30,9 +55,10 @@ export default function PropertiesPage() {
       <main className="max-w-7xl mx-auto px-4 mt-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {loading
-            ? Array.from({ length: 6 }).map((_, i) => (
-                <PropertySkeleton key={i} />
-              ))
+            ? skeletons.map((_, i) => (
+  <PropertySkeleton key={i} />
+))
+
             : data.map((p, index) => (
                 <PropertyCard
                   key={p._id}

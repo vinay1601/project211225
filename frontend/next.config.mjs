@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
- images: {
+  reactStrictMode: true,
+  swcMinify: true,
+
+  images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
@@ -9,17 +12,45 @@ const nextConfig = {
       },
       {
         protocol: "https",
-        hostname: "**.cloudinary.com",
+        hostname: "res.cloudinary.com",
       },
       {
         protocol: "https",
-        hostname: "**.amazonaws.com",
+        hostname: "s3.amazonaws.com",
       },
     ],
   },
+
   compiler: {
-    removeConsole: true,
+    removeConsole: process.env.NODE_ENV === "production",
   },
 };
 
 export default nextConfig;
+
+
+// /** @type {import('next').NextConfig} */
+// const nextConfig = {
+//  images: {
+//     formats: ["image/avif", "image/webp"],
+//     remotePatterns: [
+//       {
+//         protocol: "https",
+//         hostname: "photos.propspace.com",
+//       },
+//       {
+//         protocol: "https",
+//         hostname: "**.cloudinary.com",
+//       },
+//       {
+//         protocol: "https",
+//         hostname: "**.amazonaws.com",
+//       },
+//     ],
+//   },
+//   compiler: {
+//     removeConsole: true,
+//   },
+// };
+// // 
+// export default nextConfig;

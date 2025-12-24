@@ -33,9 +33,12 @@ export default function PropertiesHeader() {
           <div className="flex items-center gap-2 border rounded-full px-4 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-lime-400 sm:ml-6 w-full sm:w-auto">
             <Search size={16} className="text-gray-400" />
             <input
-              placeholder="Search location (Dubai)"
-              className="outline-none text-sm bg-transparent w-full sm:w-52"
-            />
+  placeholder="Search location (Dubai)"
+  inputMode="search"
+  enterKeyHint="search"
+  className="outline-none text-sm bg-transparent w-full sm:w-52"
+/>
+
           </div>
           <div className="sm:ml-auto w-full sm:w-auto">
             <button
